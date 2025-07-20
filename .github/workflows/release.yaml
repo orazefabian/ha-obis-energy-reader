@@ -13,6 +13,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          repository: 'orazefabian/ha-obis-energy-reader'
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           draft: false
