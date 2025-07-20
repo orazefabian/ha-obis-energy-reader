@@ -1,11 +1,9 @@
 {
   "domain": "obis_energy_reader",
   "name": "OBIS Energy Reader",
-  "version": "1.0.0",
-  "documentation": "https://github.com/ludeeus/obis_energy_reader",
-  "requirements": [],
+  "codeowners": ["@orazefabian"],
   "dependencies": [],
-  "codeowners": ["@your-github-username"],
-  "config_flow": true,
-  "iot_class": "cloud_polling"
+  "documentation": "https://github.com/orazefabian/ha-obis-energy-reader",
+  "requirements": [],
+  "version": "0.0.1"
 }
