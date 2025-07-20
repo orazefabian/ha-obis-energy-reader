@@ -4,6 +4,7 @@
   "codeowners": ["@orazefabian"],
   "dependencies": [],
   "documentation": "https://github.com/orazefabian/ha-obis-energy-reader",
+  "iot_class": "local_polling",
   "requirements": [],
   "version": "0.0.1"
 }
