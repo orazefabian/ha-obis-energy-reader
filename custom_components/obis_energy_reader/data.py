@@ -9,17 +9,17 @@ if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.loader import Integration
 
-    from .api import IntegrationBlueprintApiClient
+    from .api import OBISEnergyReaderApiClient
     from .coordinator import BlueprintDataUpdateCoordinator
 
 
-type IntegrationBlueprintConfigEntry = ConfigEntry[IntegrationBlueprintData]
+type OBISEnergyReaderConfigEntry = ConfigEntry[OBISEnergyReaderData]
 
 
 @dataclass
-class IntegrationBlueprintData:
-    """Data for the Blueprint integration."""
+class OBISEnergyReaderData:
+    """Data for the OBIS Energy Reader."""
 
-    client: IntegrationBlueprintApiClient
+    client: OBISEnergyReaderApiClient
     coordinator: BlueprintDataUpdateCoordinator
     integration: Integration

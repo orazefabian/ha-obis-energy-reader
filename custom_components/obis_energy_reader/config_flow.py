@@ -1,4 +1,4 @@
-"""Adds config flow for Blueprint."""
+"""Adds config flow for OBIS Energy Reader."""
 
 from __future__ import annotations
 
@@ -10,16 +10,17 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from slugify import slugify
 
 from .api import (
-    IntegrationBlueprintApiClient,
-    IntegrationBlueprintApiClientAuthenticationError,
-    IntegrationBlueprintApiClientCommunicationError,
-    IntegrationBlueprintApiClientError,
+    OBISEnergyReaderApiClient,
+    OBISEnergyReaderApiClientAuthenticationError,
+    OBISEnergyReaderApiClientCommunicationError,
+    OBISEnergyReaderApiClientError,
 )
 from .const import DOMAIN, LOGGER
 
+CONF_OBIS_URL = "obis_url"
 
-class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Config flow for Blueprint."""
+class OBISFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+    """Config flow for OBIS Energy Reader."""
 
     VERSION = 1
 
@@ -34,21 +35,19 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 await self._test_credentials(
                     username=user_input[CONF_USERNAME],
                     password=user_input[CONF_PASSWORD],
+                    obis_url=user_input[CONF_OBIS_URL],
                 )
-            except IntegrationBlueprintApiClientAuthenticationError as exception:
+            except OBISEnergyReaderApiClientAuthenticationError as exception:
                 LOGGER.warning(exception)
                 _errors["base"] = "auth"
-            except IntegrationBlueprintApiClientCommunicationError as exception:
+            except OBISEnergyReaderApiClientCommunicationError as exception:
                 LOGGER.error(exception)
                 _errors["base"] = "connection"
-            except IntegrationBlueprintApiClientError as exception:
+            except OBISEnergyReaderApiClientError as exception:
                 LOGGER.exception(exception)
                 _errors["base"] = "unknown"
             else:
                 await self.async_set_unique_id(
-                    ## Do NOT use this in production code
-                    ## The unique_id should never be something that can change
-                    ## https://developers.home-assistant.io/docs/config_entries_config_flow_handler#unique-ids
                     unique_id=slugify(user_input[CONF_USERNAME])
                 )
                 self._abort_if_unique_id_configured()
@@ -74,16 +73,25 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                             type=selector.TextSelectorType.PASSWORD,
                         ),
                     ),
+                    vol.Required(
+                        CONF_OBIS_URL,
+                        default=(user_input or {}).get(CONF_OBIS_URL, vol.UNDEFINED),
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.URL,
+                        ),
+                    ),
                 },
             ),
             errors=_errors,
         )
 
-    async def _test_credentials(self, username: str, password: str) -> None:
-        """Validate credentials."""
-        client = IntegrationBlueprintApiClient(
+    async def _test_credentials(self, username: str, password: str, obis_url: str) -> None:
+        """Validate credentials and OBIS endpoint."""
+        client = OBISEnergyReaderApiClient(
             username=username,
             password=password,
+            obis_url=obis_url,
             session=async_create_clientsession(self.hass),
         )
         await client.async_get_data()

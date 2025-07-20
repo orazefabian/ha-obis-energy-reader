@@ -1,4 +1,4 @@
-"""Binary sensor platform for integration_blueprint."""
+"""Binary sensor platform for obis_energy_reader."""
 
 from __future__ import annotations
 
@@ -10,32 +10,38 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 
-from .entity import IntegrationBlueprintEntity
+from .entity import OBISEnergyReaderEntity
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
     from .coordinator import BlueprintDataUpdateCoordinator
-    from .data import IntegrationBlueprintConfigEntry
+    from .data import OBISEnergyReaderConfigEntry
 
-ENTITY_DESCRIPTIONS = (
+OBIS_BINARY_SENSORS = [
+    ("importing", "Importing Power", "mdi:transmission-tower"),
+    ("exporting", "Exporting Power", "mdi:solar-power"),
+]
+
+ENTITY_DESCRIPTIONS = tuple(
     BinarySensorEntityDescription(
-        key="integration_blueprint",
-        name="Integration Blueprint Binary Sensor",
-        device_class=BinarySensorDeviceClass.CONNECTIVITY,
-    ),
+        key=field[0],
+        name=f"OBIS {field[1]}",
+        icon=field[2],
+    )
+    for field in OBIS_BINARY_SENSORS
 )
 
 
 async def async_setup_entry(
     hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
-    entry: IntegrationBlueprintConfigEntry,
+    entry: OBISEnergyReaderConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the binary_sensor platform."""
     async_add_entities(
-        IntegrationBlueprintBinarySensor(
+        OBISEnergyReaderBinarySensor(
             coordinator=entry.runtime_data.coordinator,
             entity_description=entity_description,
         )
@@ -43,8 +49,8 @@ async def async_setup_entry(
     )
 
 
-class IntegrationBlueprintBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
-    """integration_blueprint binary_sensor class."""
+class OBISEnergyReaderBinarySensor(OBISEnergyReaderEntity, BinarySensorEntity):
+    """obis_energy_reader binary_sensor class."""
 
     def __init__(
         self,
@@ -56,6 +62,11 @@ class IntegrationBlueprintBinarySensor(IntegrationBlueprintEntity, BinarySensorE
         self.entity_description = entity_description
 
     @property
-    def is_on(self) -> bool:
+    def is_on(self) -> bool | None:
         """Return true if the binary_sensor is on."""
-        return self.coordinator.data.get("title", "") == "foo"
+        data = self.coordinator.data
+        if self.entity_description.key == "importing":
+            return float(data.get("1.7.0", 0)) > 0
+        if self.entity_description.key == "exporting":
+            return float(data.get("2.7.0", 0)) > 0
+        return None

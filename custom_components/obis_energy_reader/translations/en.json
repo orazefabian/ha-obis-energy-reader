@@ -1,21 +1,78 @@
 {
+    "title": "OBIS Energy Reader",
     "config": {
         "step": {
             "user": {
-                "description": "If you need help with the configuration have a look here: https://github.com/ludeeus/integration_blueprint",
+                "title": "Configure OBIS Energy Reader",
+                "description": "Enter the details to connect to your OBIS JSON endpoint.",
                 "data": {
                     "username": "Username",
-                    "password": "Password"
+                    "password": "Password",
+                    "obis_url": "OBIS JSON Endpoint URL"
                 }
             }
         },
         "error": {
-            "auth": "Username/Password is wrong.",
-            "connection": "Unable to connect to the server.",
-            "unknown": "Unknown error occurred."
+            "auth": "Authentication failed. Please check your credentials.",
+            "connection": "Cannot connect to the OBIS endpoint.",
+            "unknown": "Unknown error occurred. Please check logs."
         },
         "abort": {
             "already_configured": "This entry is already configured."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "1.8.0": {
+                "name": "Total active energy consumed (import)",
+                "state": "kWh"
+            },
+            "2.8.0": {
+                "name": "Total active energy exported (export)",
+                "state": "kWh"
+            },
+            "3.8.0": {
+                "name": "Total positive reactive energy imported",
+                "state": "kvarh"
+            },
+            "4.8.0": {
+                "name": "Total negative reactive energy exported",
+                "state": "kvarh"
+            },
+            "1.7.0": {
+                "name": "Instantaneous active power (import)",
+                "state": "W"
+            },
+            "2.7.0": {
+                "name": "Instantaneous active power (export)",
+                "state": "W"
+            },
+            "16.7.0": {
+                "name": "Instantaneous total active power",
+                "state": "W"
+            },
+            "timestamp": {
+                "name": "Timestamp of the reading"
+            },
+            "uptime": {
+                "name": "Uptime of the device"
+            },
+            "UTC": {
+                "name": "Timestamp in UTC"
+            }
+        },
+        "binary_sensor": {
+            "importing": {
+                "name": "Importing Power"
+            },
+            "exporting": {
+                "name": "Exporting Power"
+            }
+        },
+        "switch": {
+            "reset_uptime": {
+                "name": "Reset Uptime"
+            }
         }
     }
 }

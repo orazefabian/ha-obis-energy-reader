@@ -1,12 +1,12 @@
 {
-  "domain": "integration_blueprint",
-  "name": "Integration blueprint",
-  "codeowners": [
-    "@ludeeus"
-  ],
+  "domain": "obis_energy_reader",
+  "name": "OBIS Energy Reader",
+  "version": "1.0.0",
+  "documentation": "https://github.com/orazefabian/ha-obis-energy-reader",
+  "requirements": [],
+  "dependencies": [],
+  "codeowners": ["@orazefabian"],
   "config_flow": true,
-  "documentation": "https://github.com/ludeeus/integration_blueprint",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/ludeeus/integration_blueprint/issues",
-  "version": "0.1.0"
+  "description": "Reads energy measurement readings in OBIS standard from a configurable JSON endpoint."
 }
