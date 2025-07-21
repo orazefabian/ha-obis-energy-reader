@@ -51,7 +51,7 @@ async def async_setup_entry(
             obis_url=entry.data[CONF_OBIS_URL],
             session=async_get_clientsession(hass),
         ),
-        integration=await async_get_loaded_integration(hass, entry.domain),
+        integration=async_get_loaded_integration(hass, entry.domain),
         coordinator=coordinator,
     )
 
