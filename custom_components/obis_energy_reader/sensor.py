@@ -28,7 +28,7 @@ OBIS_FIELDS = [
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, # noqa: ARG001 Unused function argument: `hass`
+    hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
     entry: OBISEnergyReaderConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
