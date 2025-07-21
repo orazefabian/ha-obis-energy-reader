@@ -15,7 +15,7 @@ from .api import (
     OBISEnergyReaderApiClientCommunicationError,
     OBISEnergyReaderApiClientError,
 )
-from .const import DOMAIN, LOGGER
+from .const import DOMAIN
 
 CONF_OBIS_URL = "obis_url"
 
@@ -25,7 +25,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
-    async def async_step_user(self, user_input=None):
+    async def async_step_user(
+        self,
+        user_input: dict | None = None,
+    ) -> config_entries.FlowResult:
+        """Handle the initial step of the config flow."""
         errors = {}
         if user_input is not None:
             try:
@@ -63,7 +67,13 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def _test_credentials(self, username, password, obis_url):
+    async def _test_credentials(
+        self,
+        username: str,
+        password: str,
+        obis_url: str,
+    ) -> None:
+        """Test credentials and OBIS endpoint connectivity."""
         client = OBISEnergyReaderApiClient(
             username=username,
             password=password,

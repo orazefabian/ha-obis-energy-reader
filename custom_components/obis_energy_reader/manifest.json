@@ -7,6 +7,5 @@
   "dependencies": [],
   "codeowners": ["@orazefabian"],
   "config_flow": true,
-  "iot_class": "local_polling",
-  "description": "Reads energy measurement readings in OBIS standard from a configurable JSON endpoint."
+  "iot_class": "local_polling"
 }
