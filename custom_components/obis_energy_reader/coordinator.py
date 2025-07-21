@@ -20,22 +20,13 @@ if TYPE_CHECKING:
 class BlueprintDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the API."""
 
-    def __init__(self, hass, logger, name, update_interval):
-        super().__init__(
-            hass,
-            logger,
-            name=name,
-            update_interval=update_interval,
-        )
-        self.api = None
+    config_entry: OBISEnergyReaderConfigEntry
 
     async def _async_update_data(self) -> Any:
         """Update data via library."""
-        if self.api is None:
-            # Try to get the API client from the integration runtime data
-            entry = next(iter(self.hass.config_entries.async_entries(DOMAIN)), None)
-            if entry and hasattr(entry, "runtime_data"):
-                self.api = entry.runtime_data.client
-        if self.api:
-            return await self.api.async_get_data()
-        return {}
+        try:
+            return await self.config_entry.runtime_data.client.async_get_data()
+        except OBISEnergyReaderApiClientAuthenticationError as exception:
+            raise ConfigEntryAuthFailed(exception) from exception
+        except OBISEnergyReaderApiClientError as exception:
+            raise UpdateFailed(exception) from exception
