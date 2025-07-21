@@ -1,10 +1,12 @@
 {
   "domain": "obis_energy_reader",
   "name": "OBIS Energy Reader",
-  "codeowners": ["@orazefabian"],
-  "dependencies": [],
+  "version": "1.0.0",
   "documentation": "https://github.com/orazefabian/ha-obis-energy-reader",
-  "iot_class": "local_polling",
   "requirements": [],
-  "version": "0.0.1"
+  "dependencies": [],
+  "codeowners": ["@orazefabian"],
+  "config_flow": true,
+  "iot_class": "local_polling",
+  "description": "Reads energy measurement readings in OBIS standard from a configurable JSON endpoint."
 }
