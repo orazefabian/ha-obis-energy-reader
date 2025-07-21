@@ -5,16 +5,22 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions: {}
+
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Create Release
+      - name: "ZIP the integration directory"
+        shell: "bash"
+        run: |
+          cd "${{ github.workspace }}/custom_components/obis_energy_reader"
+          zip obis_energy_reader.zip -r ./
+
+      - name: "Upload the ZIP file to the release"
         uses: softprops/action-gh-release@v2
         with:
-          repository: 'orazefabian/ha-obis-energy-reader'
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+          files: ${{ github.workspace }}/custom_components/obis_energy_reader/obis_energy_reader.zip
