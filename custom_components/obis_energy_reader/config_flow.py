@@ -53,17 +53,23 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema({
-                vol.Required(CONF_USERNAME): selector.TextSelector(
-                    selector.TextSelectorConfig(type=selector.TextSelectorType.TEXT),
-                ),
-                vol.Required(CONF_PASSWORD): selector.TextSelector(
-                    selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD),
-                ),
-                vol.Required(CONF_OBIS_URL): selector.TextSelector(
-                    selector.TextSelectorConfig(type=selector.TextSelectorType.URL),
-                ),
-            }),
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_USERNAME): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.TEXT
+                        ),
+                    ),
+                    vol.Required(CONF_PASSWORD): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.PASSWORD
+                        ),
+                    ),
+                    vol.Required(CONF_OBIS_URL): selector.TextSelector(
+                        selector.TextSelectorConfig(type=selector.TextSelectorType.URL),
+                    ),
+                }
+            ),
             errors=errors,
         )
 
