@@ -58,8 +58,8 @@ class OBISEnergyReaderApiClient:
             url=self._obis_url,
         )
 
-    async def async_set_title(self, value: str) -> Any:
-        """Dummy method for compatibility (not used for OBIS)."""
+    async def async_set_title(self) -> Any:
+        """Set tile dummy method for compatibility (not used for OBIS)."""
         return None
 
     async def _api_wrapper(

@@ -15,10 +15,10 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.loader import async_get_loaded_integration
 
 from .api import OBISEnergyReaderApiClient
+from .config_flow import CONF_OBIS_URL
 from .const import DOMAIN, LOGGER
 from .coordinator import BlueprintDataUpdateCoordinator
 from .data import OBISEnergyReaderData
-from .config_flow import CONF_OBIS_URL
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 
@@ -27,6 +27,7 @@ ENTITY_DESCRIPTIONS = tuple(
     )
     for field in OBIS_SWITCHES
 )
+
 
 async def async_setup_entry(
     hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
@@ -61,13 +62,13 @@ class OBISEnergyReaderSwitch(OBISEnergyReaderEntity, SwitchEntity):
         """Return true if the switch is on."""
         return self._is_on
 
-    async def async_turn_on(self, **kwargs: Any) -> None:
+    async def async_turn_on(self) -> None:
         """Turn on the switch."""
         # Dummy: In real use, would send a command to reset uptime
         self._is_on = True
         self.async_write_ha_state()
 
-    async def async_turn_off(self, **kwargs: Any) -> None:
+    async def async_turn_off(self) -> None:
         """Turn off the switch."""
         self._is_on = False
         self.async_write_ha_state()

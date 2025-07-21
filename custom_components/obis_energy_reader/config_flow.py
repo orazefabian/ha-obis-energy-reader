@@ -19,6 +19,7 @@ from .const import DOMAIN, LOGGER
 
 CONF_OBIS_URL = "obis_url"
 
+
 class OBISFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for OBIS Energy Reader."""
 
@@ -86,7 +87,9 @@ class OBISFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=_errors,
         )
 
-    async def _test_credentials(self, username: str, password: str, obis_url: str) -> None:
+    async def _test_credentials(
+        self, username: str, password: str, obis_url: str
+    ) -> None:
         """Validate credentials and OBIS endpoint."""
         client = OBISEnergyReaderApiClient(
             username=username,
