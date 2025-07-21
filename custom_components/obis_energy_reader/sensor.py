@@ -40,18 +40,19 @@ ENTITY_DESCRIPTIONS = tuple(
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
+    hass: HomeAssistant, # noqa: ARG001 Unused function argument: `hass`
     entry: OBISEnergyReaderConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the sensor platform."""
-    async_add_entities(
+    entities = [
         OBISEnergyReaderSensor(
             coordinator=entry.runtime_data.coordinator,
             entity_description=entity_description,
         )
         for entity_description in ENTITY_DESCRIPTIONS
-    )
+    ]
+    async_add_entities(entities)
 
 
 class OBISEnergyReaderSensor(OBISEnergyReaderEntity, SensorEntity):
