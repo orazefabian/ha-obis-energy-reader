@@ -5,15 +5,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .entity import OBISEnergyReaderEntity
-
-if TYPE_CHECKING:
-    from homeassistant.core import HomeAssistant
-    from homeassistant.helpers.entity_platform import AddEntitiesCallback
-
-    from .coordinator import BlueprintDataUpdateCoordinator
-    from .data import OBISEnergyReaderConfigEntry
+from .coordinator import BlueprintDataUpdateCoordinator
+from .data import OBISEnergyReaderConfigEntry
+from .const import DOMAIN
 
 OBIS_FIELDS = [
     ("1.8.0", "Total active energy consumed (import)", "kWh"),
@@ -28,45 +26,38 @@ OBIS_FIELDS = [
     ("UTC", "Timestamp in UTC", None),
 ]
 
-ENTITY_DESCRIPTIONS = tuple(
-    SensorEntityDescription(
-        key=field[0],
-        name=f"OBIS {field[0]}: {field[1]}",
-        icon="mdi:flash" if field[2] in ("kWh", "W", "kvarh") else "mdi:clock-outline",
-        native_unit_of_measurement=field[2],
-    )
-    for field in OBIS_FIELDS
-)
-
 
 async def async_setup_entry(
-    hass: HomeAssistant,
+    hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
     entry: OBISEnergyReaderConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the sensor platform."""
-    async_add_entities([
-        OBISEnergyReaderSensor(
-            coordinator=entry.runtime_data.coordinator,
-            entity_description=entity_description,
-        )
-        for entity_description in ENTITY_DESCRIPTIONS
-    ])
+    """Set up OBIS sensors from static field list."""
+    coordinator = entry.runtime_data.coordinator
+    sensors = [
+        OBISEnergyReaderStaticSensor(coordinator, key, name, unit)
+        for key, name, unit in OBIS_FIELDS
+    ]
+    async_add_entities(sensors, update_before_add=True)
 
 
-class OBISEnergyReaderSensor(OBISEnergyReaderEntity, SensorEntity):
-    """OBIS Energy Reader Sensor class."""
-
+class OBISEnergyReaderStaticSensor(SensorEntity):
     def __init__(
         self,
         coordinator: BlueprintDataUpdateCoordinator,
-        entity_description: SensorEntityDescription,
-    ) -> None:
-        """Initialize the sensor class."""
-        super().__init__(coordinator)
-        self.entity_description = entity_description
+        key: str,
+        name: str,
+        unit: str | None,
+    ):
+        self.coordinator = coordinator
+        self._key = key
+        self._attr_unique_id = f"obis_{key}"
+        self._attr_name = name
+        self._attr_native_unit_of_measurement = unit
 
     @property
-    def native_value(self) -> str | None:
-        """Return the native value of the sensor."""
-        return self.coordinator.data.get(self.entity_description.key)
+    def native_value(self):
+        return self.coordinator.data.get(self._key)
+
+    async def async_update(self):
+        await self.coordinator.async_request_refresh()
