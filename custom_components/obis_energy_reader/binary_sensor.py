@@ -57,10 +57,10 @@ class OBISEnergyReaderBinarySensor(BinarySensorEntity):
         data = self.coordinator.data
         if self._key == OBISBinarySensorKey.IMPORTING:
             return (
-                float(data.get(OBISSensorKey.INSTANTANEOUS_ACTIVE_POWER_IMPORT, 0)) > 0
+                float(data.get(OBISSensorKey.INSTANTANEOUS_ACTIVE_POWER_IMPORT.value, 0)) > 0
             )
         if self._key == OBISBinarySensorKey.EXPORTING:
             return (
-                float(data.get(OBISSensorKey.INSTANTANEOUS_ACTIVE_POWER_EXPORT, 0)) > 0
+                float(data.get(OBISSensorKey.INSTANTANEOUS_ACTIVE_POWER_EXPORT.value, 0)) > 0
             )
         return None
