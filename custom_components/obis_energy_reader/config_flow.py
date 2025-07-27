@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_USERNAME
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from slugify import slugify
 
 from .api import (
     OBISEnergyReaderApiClient,
@@ -33,7 +31,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input is not None:
             try:
-                await self._test_credentials(
+                await self._test_obis_url(
                     obis_url=user_input[CONF_OBIS_URL],
                 )
             except OBISEnergyReaderApiClientAuthenticationError:
@@ -43,10 +41,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except OBISEnergyReaderApiClientError:
                 errors["base"] = "unknown"
             else:
-                await self.async_set_unique_id(slugify(user_input[CONF_USERNAME]))
+                await self.async_set_unique_id(user_input[CONF_OBIS_URL])
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
-                    title=user_input[CONF_USERNAME],
+                    title=user_input[CONF_OBIS_URL],
                     data=user_input,
                 )
         return self.async_show_form(
@@ -61,11 +59,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def _test_credentials(
+    async def _test_obis_url(
         self,
         obis_url: str,
     ) -> None:
-        """Test credentials and OBIS endpoint connectivity."""
+        """Test OBIS endpoint connectivity."""
         client = OBISEnergyReaderApiClient(
             obis_url=obis_url,
             session=async_create_clientsession(self.hass),
