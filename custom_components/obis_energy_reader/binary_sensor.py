@@ -50,6 +50,12 @@ class OBISEnergyReaderBinarySensor(BinarySensorEntity):
         self._attr_unique_id = f"obis_binary_{key.value}"
         self._attr_name = name
         self._attr_icon = icon
+        self._attr_device_info = {
+            "identifiers": {("obis_energy_reader", coordinator.hass.data["obis_energy_reader_entry_id"])},
+            "name": "OBIS Energy Reader",
+            "manufacturer": "OBIS",
+            "model": "OBIS JSON Endpoint",
+        }
 
     @property
     def is_on(self) -> bool | None:

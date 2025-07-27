@@ -48,6 +48,12 @@ class OBISEnergyReaderStaticSensor(SensorEntity):
         self._attr_unique_id = f"obis_{key.value}"
         self._attr_name = name
         self._attr_native_unit_of_measurement = unit
+        self._attr_device_info = {
+            "identifiers": {("obis_energy_reader", coordinator.hass.data["obis_energy_reader_entry_id"])},
+            "name": "OBIS Energy Reader",
+            "manufacturer": "OBIS",
+            "model": "OBIS JSON Endpoint",
+        }
 
     @property
     def native_value(self) -> str | None:
