@@ -40,14 +40,10 @@ class OBISEnergyReaderApiClient:
 
     def __init__(
         self,
-        username: str,
-        password: str,
         obis_url: str,
         session: aiohttp.ClientSession,
     ) -> None:
         """OBIS Energy Reader API Client."""
-        self._username = username
-        self._password = password
         self._obis_url = obis_url
         self._session = session
 

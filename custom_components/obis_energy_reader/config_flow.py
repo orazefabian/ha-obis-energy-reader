@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.const import CONF_USERNAME
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from slugify import slugify
@@ -34,8 +34,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 await self._test_credentials(
-                    username=user_input[CONF_USERNAME],
-                    password=user_input[CONF_PASSWORD],
                     obis_url=user_input[CONF_OBIS_URL],
                 )
             except OBISEnergyReaderApiClientAuthenticationError:
@@ -55,16 +53,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_USERNAME): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
-                        ),
-                    ),
-                    vol.Required(CONF_PASSWORD): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.PASSWORD
-                        ),
-                    ),
                     vol.Required(CONF_OBIS_URL): selector.TextSelector(
                         selector.TextSelectorConfig(type=selector.TextSelectorType.URL),
                     ),
@@ -75,14 +63,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _test_credentials(
         self,
-        username: str,
-        password: str,
         obis_url: str,
     ) -> None:
         """Test credentials and OBIS endpoint connectivity."""
         client = OBISEnergyReaderApiClient(
-            username=username,
-            password=password,
             obis_url=obis_url,
             session=async_create_clientsession(self.hass),
         )
