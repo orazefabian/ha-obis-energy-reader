@@ -19,6 +19,18 @@ A custom Home Assistant integration to read energy measurement data in the OBIS 
 - timestamp, uptime, UTC
 
 ## Installation
+
+### Option 1: HACS (Recommended)
+1. Open **HACS** in your Home Assistant instance.
+2. Go to **Integrations**.
+3. Click the **three dots menu** in the top right corner and select **Custom repositories**.
+4. Add this repository URL: `https://github.com/orazefabian/ha-obis-energy-reader`
+5. Set the category to **Integration**.
+6. Click **Add**.
+7. Find **OBIS Energy Reader** in the HACS integrations list and click **Download**.
+8. Restart Home Assistant.
+
+### Option 2: Manual Installation
 1. Copy the `obis_energy_reader` folder to your Home Assistant `custom_components` directory:
    ```
    /config/custom_components/obis_energy_reader
