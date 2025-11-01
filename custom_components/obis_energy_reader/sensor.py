@@ -71,6 +71,8 @@ class OBISEnergyReaderStaticSensor(SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Return the value of the sensor from coordinator data."""
+        if not self.coordinator.last_update_success:
+            return None
         return self.coordinator.data.get(self._key.value)
 
     async def async_update(self) -> None:

@@ -54,6 +54,8 @@ class OBISEnergyReaderBinarySensor(BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         """Return the state of the binary sensor."""
+        if not self.coordinator.last_update_success:
+            return None
         data = self.coordinator.data
         if self._key == OBISBinarySensorKey.IMPORTING:
             return (
